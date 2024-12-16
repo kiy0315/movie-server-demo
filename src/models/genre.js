@@ -1,28 +1,29 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
-const Movie = require("./movie");
-
-const Genre = sequelize.define(
-  "Genre",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+module.exports = (sequelize, DataTypes) => {
+  const Genre = sequelize.define(
+    "Genre",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    timestamps: false, // 자동으로 createdAt과 updatedAt 추가 안 함
-  }
-);
+    {
+      tableName: "genre",
+      timestamps: false,
+    }
+  );
 
-Genre.hasMany(Movie, {
-  foreignKey: 'genre_id',
-  sourceKey: 'id',
-});
+  Genre.associate = function (models) {
+    Genre.hasMany(models.Movie, {
+      foreignKey: "genre_id",
+      sourceKey: "id",
+    });
+  };
 
-module.exports = Genre;
+  return Genre;
+};
