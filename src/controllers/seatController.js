@@ -1,4 +1,5 @@
-const Seat = require("../models/seat");
+const db = require("../models");
+const Seat = db.Seat;
 const { StatusCodes } = require("http-status-codes");
 
 const createTheater = async (req, res) => {
@@ -26,4 +27,4 @@ const getAllTheater = async (req, res) => {
       error: "Internal Server Error",
     });
   }
-};  
+};

@@ -1,4 +1,5 @@
-const Rating = require("../models/rating"); // Rating 모델
+const db = require("../models");
+const Rating = db.Rating;
 const { StatusCodes } = require("http-status-codes");
 
 const createRating = async (req, res) => {

@@ -1,11 +1,14 @@
-const Movie = require("../models/movie");
+const db = require("../models");
+const Movie = db.Movie;
+const Genre = db.Genre;
+const Rating = db.Rating;
 const { StatusCodes } = require("http-status-codes");
 
 const createMovie = async (req, res) => {
   const {
     title,
     summary,
-    description,
+    detail,
     running_time,
     genre_id,
     rating_id,
@@ -18,7 +21,7 @@ const createMovie = async (req, res) => {
     const movie = await Movie.create({
       title,
       summary,
-      description,
+      detail,
       running_time,
       genre_id,
       rating_id,

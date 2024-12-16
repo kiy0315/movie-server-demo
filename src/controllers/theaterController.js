@@ -1,4 +1,5 @@
-const Theater = require("../models/theater");
+const db = require("../models");
+const Theater = db.Theater;
 const { StatusCodes } = require("http-status-codes");
 
 const createTheater = async (req, res) => {
@@ -26,4 +27,31 @@ const getAllTheater = async (req, res) => {
       error: "Internal Server Error",
     });
   }
-};  
+};
+
+const deleteTheater = async (req, res) => {
+  let theaterId = req.params.id;
+  theaterId = parseInt(theaterId);
+
+  try {
+    const theaterId = await Theater.destroy({
+      where: { id: theaterId },
+    });
+
+    if (theaterId === 0) return res.status(StatusCodes.NOT_FOUND).end();
+
+    return res.status(StatusCodes.OK).json({
+      message: "theaterId deleted successfully",
+    });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: "Internal Server Error",
+    });
+  }
+};
+
+module.exports = {
+  createTheater,
+  getAllTheater,
+  deleteTheater,
+};

@@ -9,13 +9,19 @@ const movieRoute = require("./routes/movieRoute");
 const genreRoute = require("./routes/genreRoute");
 const ratingRoute = require("./routes/ratingRoute");
 const authRoute = require("./routes/authRoute");
+const theaterRoute = require("./routes/theaterRoute");
+const ticketRoute = require("./routes/ticketRoute");
+const scheduleRoute = require("./routes/scheduleRoute");
 
 app.use("/auth", authRoute);
 app.use("/movie", movieRoute);
 app.use("/genre", genreRoute);
 app.use("/rating", ratingRoute);
+app.use("/theater", theaterRoute);
+app.use("/ticket", ticketRoute);
+app.use("/schedule", scheduleRoute);
 
-const port = process.env.PORT || 3333; // 기본 포트 설정
+const port = process.env.PORT;
 
 // 서버 실행 및 DB 연결
 sequelize

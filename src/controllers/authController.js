@@ -1,4 +1,5 @@
-const User = require("../models/User");
+const db = require("../models");
+const User = db.User;
 const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");

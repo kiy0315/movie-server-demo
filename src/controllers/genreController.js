@@ -1,4 +1,5 @@
-const Genre = require("../models/genre.js"); 
+const db = require("../models");
+const Genre = db.Genre;
 const { StatusCodes } = require("http-status-codes");
 
 const createGenre = async (req, res) => {
