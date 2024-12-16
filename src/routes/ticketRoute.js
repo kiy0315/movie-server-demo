@@ -5,8 +5,12 @@ const {
   updateTicketById,
   deleteTicketById,
 } = require("../controllers/ticketController");
+const { verifyToken } = require("../middlewares/jwtMiddleware");
+
+
 const router = express.Router();
 router.use(express.json());
+router.use(verifyToken);
 
 router.get("/:ticketId", getTicketById);
 router.post("/", reservationTicket);

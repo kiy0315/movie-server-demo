@@ -11,5 +11,5 @@ router.post("/", createRating);
 
 router.get("/", getAllRatings);
 
-router.delete("/:genreId", deleteRating);
+router.delete("/:ratingId", deleteRating);
 module.exports = router;
