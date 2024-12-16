@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      payment_pk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       ticket_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -14,10 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       price: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      payment_time: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
       },
       status: {
         type: DataTypes.BOOLEAN,
