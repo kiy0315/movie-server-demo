@@ -34,7 +34,7 @@ const getAllGenres = async (req, res) => {
 };
 
 const deleteGenre = async (req, res) => {
-  let genreId = req.params.id;
+  let genreId = req.params.genreId;
   genreId = parseInt(genreId);
   try {
     const genre = await Genre.destroy({

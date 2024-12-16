@@ -34,7 +34,7 @@ const getAllRatings = async (req, res) => {
 };
 
 const deleteRating = async (req, res) => {
-  let ratingId = req.params.id;
+  let ratingId = req.params.ratingId;
   ratingId = parseInt(ratingId);
   try {
     const rating = await Rating.destroy({

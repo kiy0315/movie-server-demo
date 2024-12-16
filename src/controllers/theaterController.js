@@ -30,7 +30,7 @@ const getAllTheater = async (req, res) => {
 };
 
 const deleteTheater = async (req, res) => {
-  let theaterId = req.params.id;
+  let theaterId = req.params.theaterId;
   theaterId = parseInt(theaterId);
 
   try {

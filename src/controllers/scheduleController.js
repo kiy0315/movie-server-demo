@@ -38,7 +38,7 @@ const getAllSchedule = async (req, res) => {
 };
 
 const deleteSchedule = async (req, res) => {
-  let scheduleId = req.params.id;
+  let scheduleId = req.params.scheduleId;
   scheduleId = parseInt(scheduleId);
 
   try {

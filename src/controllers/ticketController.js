@@ -4,14 +4,13 @@ const db = require("../models");
 const Ticket = db.Ticket;
 const Schedule = db.Schedule;
 const Theater = db.Theater;
-
+const User = db.User;
 const reservationTicket = async (req, res) => {
-  const { schedule_id, user_id, seat_count } = req.body;
-
+  const { schedule_id, seat_count } = req.body;
+  const userId = req.userId;
   let lock;
   let t;
   try {
-    // 트랜잭션 시작
     t = await sequelize.transaction();
 
     // 스케줄 정보를 락으로 가져오기
@@ -27,15 +26,10 @@ const reservationTicket = async (req, res) => {
       transaction: t,
     });
 
-    console.log(schedule.Theater.max_seat); // Theater 모델의 max_seat 값
-
     if (!schedule) {
       throw new Error(`Schedule with ID ${schedule_id} not found.`);
     }
 
-    console.log("Schedule locked:", schedule);
-
-    // 예매 가능한지 확인 (Schedule 유효성 검사)
     const totalTickets = await Ticket.sum("seat_count", {
       where: { schedule_id },
       transaction: t,
@@ -49,17 +43,15 @@ const reservationTicket = async (req, res) => {
       throw new Error("Sold Out");
     }
 
-    // 티켓 생성
     const ticket = await Ticket.create(
       {
         seat_count,
         schedule_id,
-        user_id,
+        userId,
       },
       { transaction: t }
     );
 
-    // 트랜잭션 커밋
     await t.commit();
 
     return res.status(StatusCodes.CREATED).json(ticket);
@@ -76,10 +68,25 @@ const reservationTicket = async (req, res) => {
 };
 
 const getTicketById = async (req, res) => {
-  let ticketId = req.params.id;
+  let ticketId = req.params.ticketId;
   ticketId = parseInt(ticketId);
+
   try {
-    const ticket = await Ticket.findByPk(ticketId);
+    const ticket = await Ticket.findOne({
+      where: { id: ticketId },
+      include: [
+        {
+          model: User,
+          attributes: ["email"],
+        },
+      ],
+    });
+    if (!ticket) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: "Ticket not found",
+      });
+    }
+
     return res.status(StatusCodes.OK).json(ticket);
   } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -90,7 +97,7 @@ const getTicketById = async (req, res) => {
 };
 
 const updateTicketById = async (req, res) => {
-  let ticketId = req.params.id;
+  let ticketId = req.params.ticketId;
   ticketId = parseInt(ticketId);
 
   try {
@@ -124,7 +131,7 @@ const updateTicketById = async (req, res) => {
 };
 
 const deleteTicketById = async (req, res) => {
-  let ticketId = req.params.id;
+  let ticketId = req.params.ticketId;
   ticketId = parseInt(ticketId);
   try {
     const ticket = await Ticket.destroy({

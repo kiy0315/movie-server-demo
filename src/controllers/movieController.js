@@ -68,7 +68,7 @@ const getAllMovies = async (req, res) => {
 };
 
 const getMovieById = async (req, res) => {
-  let movieId = req.params.id;
+  let movieId = req.params.movieId;
   movieId = parseInt(movieId);
 
   try {
@@ -138,7 +138,7 @@ const getMoviesByCategory = async (req, res) => {
 };
 
 const deleteMovie = async (req, res) => {
-  let movieId = req.params.id;
+  let movieId = req.params.movieId;
   movieId = parseInt(movieId);
   try {
     const movie = await Movie.destroy({
