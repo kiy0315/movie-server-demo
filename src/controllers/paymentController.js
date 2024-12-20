@@ -1,5 +1,6 @@
 const db = require("../models");
 const Payment = db.Payment;
+const UserPaymentDetails = db.UserPaymentDetails;
 const { StatusCodes } = require("http-status-codes");
 
 const createPayment = async (req, res) => {
@@ -13,8 +14,8 @@ const createPayment = async (req, res) => {
   }
 };
 
-const updatePayment = async (req, res) => {
-  let paymentId = req.params.id;
+const updatePaymentById = async (req, res) => {
+  let paymentId = req.params.paymentId;
   paymentId = parseInt(paymentId);
   try {
     const payment = await Payment.findOne({
@@ -39,25 +40,31 @@ const updatePayment = async (req, res) => {
   }
 };
 
-const getPaymentByUserId = async (req, res) => {
-  let userId = req.params.id;
-  userId = parseInt(userId);
+const getAllPaymentByUserId = async (req, res) => {
+  const userId = req.userId;
+
   try {
-    const payments = await Payment.findAll({
+    const payments = await UserPaymentDetails.findAll({
       where: { user_id: userId },
     });
-    if (payments.length === 0) return res.status(StatusCodes.NOT_FOUND).end();
+
+    if (!payments.length) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: "No payments found for this user.",
+      });
+    }
 
     return res.status(StatusCodes.OK).json(payments);
   } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       error: "Internal Server Error",
+      details: error.message,
     });
   }
 };
 
-const deletePayment = async (req, res) => {
-  let paymentId = req.params.id;
+const deletePaymentById = async (req, res) => {
+  let paymentId = req.params.paymentId;
   paymentId = parseInt(paymentId);
   try {
     const payment = await Payment.destory({
@@ -76,7 +83,7 @@ const deletePayment = async (req, res) => {
 
 module.exports = {
   createPayment,
-  updatePayment,
-  getPaymentByUserId,
-  deletePayment,
+  updatePaymentById,
+  getAllPaymentByUserId,
+  deletePaymentById,
 };

@@ -4,6 +4,7 @@ const {
   getAllPaymentByUserId,
   updatePaymentById,
   deletePaymentById,
+  getPaymentDetailById,
 } = require("../controllers/paymentController");
 const { verifyToken } = require("../middlewares/jwtMiddleware");
 
@@ -16,5 +17,4 @@ router.post("/", createPayment);
 router.get("/", getAllPaymentByUserId);
 router.put("/:paymentId", updatePaymentById);
 router.delete("/:paymentId", deletePaymentById);
-
 module.exports = router;
