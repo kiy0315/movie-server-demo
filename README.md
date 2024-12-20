@@ -22,49 +22,13 @@
 
 ## 폴더 구조
 
-📦src
-┣ 📂config - 환경 설정 파일
-┃ ┣ 📜.env
-┃ ┃
-┃ ┗ 📜database.js
-┣ 📂controllers - 비즈니스 로직 처리
-┃ ┣ 📜authController.js
-┃ ┣ 📜genreController.js
-┃ ┣ 📜movieController.js
-┃ ┣ 📜paymentController.js
-┃ ┣ 📜ratingController.js
-┃ ┣ 📜scheduleController.js
-┃ ┣ 📜seatController.js
-┃ ┣ 📜theaterController.js
-┃ ┗ 📜ticketController.js
-┣ 📂middlewares - 요청/응답 흐름 제어
-┃ ┗ 📜jwtMiddleware.js
-┣ 📂models - 데이터베이스 스키마 정의
-┃ ┣ 📂view
-┃ ┃ ┗ 📜userPaymentDetails.js
-┃ ┣ 📜genre.js
-┃ ┣ 📜index.js
-┃ ┣ 📜movie.js
-┃ ┣ 📜payment.js
-┃ ┣ 📜rating.js
-┃ ┣ 📜schedule.js
-┃ ┣ 📜seat.js
-┃ ┣ 📜theater.js
-┃ ┣ 📜ticket.js
-┃ ┗ 📜user.js
-┣ 📂passport -
-┃ ┣ 📜googleStrategy.js
-┃ ┗ 📜passport.js
-┣ 📂routes - API 라우팅 설정
-┃ ┣ 📜authRoute.js
-┃ ┣ 📜genreRoute.js
-┃ ┣ 📜movieRoute.js
-┃ ┣ 📜payment.Route.js
-┃ ┣ 📜ratingRoute.js
-┃ ┣ 📜scheduleRoute.js
-┃ ┣ 📜theaterRoute.js
-┃ ┗ 📜ticketRoute.js
-┗ 📜app.js - Express 서버 초기화
+📦src  
+ ┣ 📂config - 환경 설정 파일  
+ ┣ 📂controllers - 비즈니스 로직 처리  
+ ┣ 📂middlewares - 요청/응답 흐름 제어  
+ ┣ 📂models - 데이터베이스 스키마 정의  
+ ┣ 📂routes - API 라우팅 설정  
+ ┗ 📜app.js - Express 서버 초기화  
 
 ## 향후 개선 사항
 
