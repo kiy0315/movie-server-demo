@@ -6,10 +6,9 @@ const Schedule = db.Schedule;
 const Theater = db.Theater;
 const User = db.User;
 const reservationTicket = async (req, res) => {
-  const { scheduleId, seatsToReserve } = req.body; // snake_case -> camelCase 변경
+  const { scheduleId, seatsToReserve } = req.body; 
   const userId = req.userId;
   let dbTransaction;
-  // sequelize 말고 nest도 한 번 확인
   try {
     dbTransaction = await sequelize.transaction();
     const schedule = await Schedule.findOne({
@@ -20,27 +19,22 @@ const reservationTicket = async (req, res) => {
           attributes: ["max_seat"],
         },
       ],
-      lock: dbTransaction.LOCK.UPDATE, // 행 락
+      lock: dbTransaction.LOCK.UPDATE, 
       transaction: dbTransaction,
     });
 
     if (isLocked) throw new Error(``);
-    // 락에 대한 테스트
-    // 1. schedule 정도 까지 구현한 뒤 테스트
+
     const reservedTicket = await Ticket.sum("seat_count", {
-      //명확한 변수명 reservedTicket (예약)
       where: { scheduleId },
       transaction: dbTransaction,
     });
     const remainingSeats = schedule.Theater.max_seat - reservedTicket;
 
     if (seatsToReserve > remainingSeats) {
-      //seat_count 부분
       await dbTransaction.rollback();
       throw new Error("Sold Out");
     }
-
-    // 윗 부분 제외한 뒤 create
 
     const ticket = await Ticket.create(
       {
