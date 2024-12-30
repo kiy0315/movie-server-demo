@@ -6,57 +6,56 @@ const Schedule = db.Schedule;
 const Theater = db.Theater;
 const User = db.User;
 const reservationTicket = async (req, res) => {
-  const { schedule_id, seat_count } = req.body;
+  const { scheduleId, seatsToReserve } = req.body; // snake_case -> camelCase 변경
   const userId = req.userId;
-  let lock;
-  let t;
+  let dbTransaction;
+  // sequelize 말고 nest도 한 번 확인
   try {
-    t = await sequelize.transaction();
-
-    // 스케줄 정보를 락으로 가져오기
+    dbTransaction = await sequelize.transaction();
     const schedule = await Schedule.findOne({
-      where: { id: schedule_id },
+      where: { id: scheduleId },
       include: [
         {
           model: Theater,
           attributes: ["max_seat"],
         },
       ],
-      lock: t.LOCK.UPDATE, // 행 락
-      transaction: t,
+      lock: dbTransaction.LOCK.UPDATE, // 행 락
+      transaction: dbTransaction,
     });
 
-    if (!schedule) {
-      throw new Error(`Schedule with ID ${schedule_id} not found.`);
-    }
-
-    const totalTickets = await Ticket.sum("seat_count", {
-      where: { schedule_id },
-      transaction: t,
+    if (isLocked) throw new Error(``);
+    // 락에 대한 테스트
+    // 1. schedule 정도 까지 구현한 뒤 테스트
+    const reservedTicket = await Ticket.sum("seat_count", {
+      //명확한 변수명 reservedTicket (예약)
+      where: { scheduleId },
+      transaction: dbTransaction,
     });
-    console.log("여기봐봐" + schedule.Theater.max_seat + " " + totalTickets);
-    const remainingSeats = schedule.Theater.max_seat - totalTickets;
-    console.log("Remaining seats:", remainingSeats);
+    const remainingSeats = schedule.Theater.max_seat - reservedTicket;
 
-    if (seat_count > remainingSeats) {
-      await t.rollback();
+    if (seatsToReserve > remainingSeats) {
+      //seat_count 부분
+      await dbTransaction.rollback();
       throw new Error("Sold Out");
     }
 
+    // 윗 부분 제외한 뒤 create
+
     const ticket = await Ticket.create(
       {
-        seat_count,
-        schedule_id,
+        seatsToReserve,
+        scheduleId,
         userId,
       },
-      { transaction: t }
+      { transaction: dbTransaction }
     );
 
     await t.commit();
 
     return res.status(StatusCodes.CREATED).json(ticket);
   } catch (error) {
-    if (t) {
+    if (dbTransaction) {
       await t.rollback();
     }
     console.error("Reservation failed:", error.message);
