@@ -23,7 +23,10 @@ const reservationTicket = async (req, res) => {
       transaction: dbTransaction,
     });
 
-    if (isLocked) throw new Error(``);
+
+    if (!schedule) {
+      throw new Error("Schedule not found");
+    }
 
     const reservedTicket = await Ticket.sum("seat_count", {
       where: { scheduleId },
@@ -32,7 +35,6 @@ const reservationTicket = async (req, res) => {
     const remainingSeats = schedule.Theater.max_seat - reservedTicket;
 
     if (seatsToReserve > remainingSeats) {
-      await dbTransaction.rollback();
       throw new Error("Sold Out");
     }
 
